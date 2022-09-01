@@ -17,7 +17,7 @@
     
     
       
-        <title>Installation - axe-core-python</title>
+        <title>Usage - axe-core-python</title>
       
     
     
@@ -56,7 +56,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="" data-md-color-accent="white">
   
     
     
@@ -66,7 +66,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#installation" class="md-skip">
+        <a href="#selenium" class="md-skip">
           Skip to content
         </a>
       
@@ -99,7 +99,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Installation
+              Usage
             
           </span>
         </div>
@@ -177,7 +177,7 @@
   
     <li class="md-nav__item">
       <a href=".." class="md-nav__link">
-        Welcome to MkDocs
+        About
       </a>
     </li>
   
@@ -197,16 +197,14 @@
       <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
       
       
-        
-      
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
-          Installation
+          Usage
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
-        Installation
+        Usage
       </a>
       
         
@@ -214,8 +212,6 @@
 <nav class="md-nav md-nav--secondary" aria-label="Table of contents">
   
   
-  
-    
   
   
     <label class="md-nav__title" for="__toc">
@@ -227,13 +223,6 @@
         <li class="md-nav__item">
   <a href="#selenium" class="md-nav__link">
     Selenium
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#playwright" class="md-nav__link">
-    Playwright
   </a>
   
 </li>
@@ -278,8 +267,6 @@
   
   
   
-    
-  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -290,13 +277,6 @@
         <li class="md-nav__item">
   <a href="#selenium" class="md-nav__link">
     Selenium
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#playwright" class="md-nav__link">
-    Playwright
   </a>
   
 </li>
@@ -313,31 +293,82 @@
             <article class="md-content__inner md-typeset">
               
                 
-  <a href="https://github.com/ruslan-rv-ua/axe-core-python/edit/master/docs/installation.md" title="Edit this page" class="md-content__button md-icon">
+  <a href="https://github.com/ruslan-rv-ua/axe-core-python/edit/master/docs/usage.md" title="Edit this page" class="md-content__button md-icon">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z"/></svg>
   </a>
 
 
 
-<h1 id="installation">Installation</h1>
-<pre><code class="language-console">pip install -U axe-core-python
-</code></pre>
+  <h1>Usage</h1>
+
 <h3 id="selenium">Selenium</h3>
-<p>To install Selenium:</p>
-<pre><code class="language-console">pip install selenium
+<p>TODO:</p>
+<!-- For `context` and `options` paremeters see [axe-core API documentation](https://github.com/dequelabs/axe-core/blob/develop/doc/API.md#api-name-axerun).
+
+Remote testing:
+
+
+<pre><code class="language-python">from selenium import webdriver
+from axe_core_python.selenium import Axe
+from pathlib import Path
+import json
+
+desired_caps = {
+            'platform' : &quot;win10&quot;,
+            'browserName' : &quot;chrome&quot;,
+            'version' :  &quot;67.0&quot;,
+            &quot;resolution&quot;: &quot;1024x768&quot;,
+            &quot;name&quot;: &quot;LambdaTest python google search test &quot;,
+            &quot;build&quot;: &quot;LambdaTest python google search build&quot;,
+            &quot;network&quot;: True,
+            &quot;video&quot;: False,
+            &quot;visual&quot;: False,
+            &quot;console&quot;: False,
+        }
+
+# remote Chrome browser on [lambdatest.com](https://www.lambdatest.com)
+driver = webdriver.Remote(
+            desired_capabilities=desired_caps,
+            command_executor=f&quot;https://{LAMBDATEST_USERNAME}:{LAMBDATEST_ACCESS_TOKEN}@hub.lambdatest.com/wd/hub&quot;
+        )
+driver.get(&quot;https://www.google.com&quot;)
+
+axe = Axe()
+
+# run test only on element with `id=&quot;user-content&quot;`
+result = axe.run(driver, context=&quot;#user-content&quot;)
+
+# save issues only
+violations_json = json.dumps(result['violations], indent=2)
+Path('violations.json').write_text(violations_json, encoding='utf8')
 </code></pre>
-<p>The appropriate driver for the browser you intend to use should be 
-downloaded and added to your path, 
-e.g. <a href="https://github.com/mozilla/geckodriver/releases">geckodriver</a> for Firefox:</p>
-<p>To simplify management of binary drivers for different browsers: 
-<a href="https://github.com/SergeyPirogov/webdriver_manager">Webdriver Manager for Python</a>.</p>
-<h3 id="playwright">Playwright</h3>
-<p>To install Playwright (<a href="https://playwright.bootcss.com/python/docs/installation">docs</a>):</p>
-<pre><code class="language-console">pip install playwright
+
+
+
+
+### Playwright
+
+TODO:
+
+Async function to test webpage for color contrast issues only:
+
+
+<pre><code class="language-python">from playwright.async_api import async_playwright
+from axe_core_python.async_playwright import Axe
+
+axe = Axe()
+
+async def test_color_contrast(url: str) -&gt; dict:
+    async with sync_playwright() as playwright:
+        browser = await playwright.chromium.launch()
+        page = await browser.new_page()
+        await page.goto(url)
+        result = await axe.run(page, options={'runOnly': 'color-contrast'})
+        await browser.close()
+        return result['violations']
 </code></pre>
-<p>Also install browser binaries:</p>
-<pre><code class="language-console">python -m playwright install
-</code></pre>
+
+https://camo.githubusercontent.com/41415ee92389d5dd1a36783f3f230a67aa8a9cd64a36f324719bf7011e8f0513/68747470733a2f2f696d672e736869656c64732e696f2f707970692f762f6178652d73656c656e69756d2d707974686f6e2e737667 -->
 
 
 
@@ -356,7 +387,7 @@ e.g. <a href="https://github.com/mozilla/geckodriver/releases">geckodriver</a> f
     <nav class="md-footer__inner md-grid" aria-label="Footer" >
       
         
-        <a href=".." class="md-footer__link md-footer__link--prev" aria-label="Previous: Welcome to MkDocs" rel="prev">
+        <a href=".." class="md-footer__link md-footer__link--prev" aria-label="Previous: About" rel="prev">
           <div class="md-footer__button md-icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
           </div>
@@ -365,7 +396,7 @@ e.g. <a href="https://github.com/mozilla/geckodriver/releases">geckodriver</a> f
               <span class="md-footer__direction">
                 Previous
               </span>
-              Welcome to MkDocs
+              About
             </div>
           </div>
         </a>

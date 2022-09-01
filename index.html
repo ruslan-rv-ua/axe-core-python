@@ -56,7 +56,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="" data-md-color-accent="white">
   
     
     
@@ -66,7 +66,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#welcome-to-mkdocs" class="md-skip">
+        <a href="#axe-core-python" class="md-skip">
           Skip to content
         </a>
       
@@ -99,7 +99,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Welcome to MkDocs
+              About
             
           </span>
         </div>
@@ -186,12 +186,12 @@
       
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
-          Welcome to MkDocs
+          About
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <a href="." class="md-nav__link md-nav__link--active">
-        Welcome to MkDocs
+        About
       </a>
       
         
@@ -210,16 +210,36 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#commands" class="md-nav__link">
-    Commands
+  <a href="#requirements" class="md-nav__link">
+    Requirements
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#project-layout" class="md-nav__link">
-    Project layout
+  <a href="#installation" class="md-nav__link">
+    Installation
   </a>
+  
+    <nav class="md-nav" aria-label="Installation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#selenium" class="md-nav__link">
+    Selenium
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#playwright" class="md-nav__link">
+    Playwright
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -239,8 +259,8 @@
   
   
     <li class="md-nav__item">
-      <a href="installation/" class="md-nav__link">
-        Installation
+      <a href="usage/" class="md-nav__link">
+        Usage
       </a>
     </li>
   
@@ -288,16 +308,36 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#commands" class="md-nav__link">
-    Commands
+  <a href="#requirements" class="md-nav__link">
+    Requirements
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#project-layout" class="md-nav__link">
-    Project layout
+  <a href="#installation" class="md-nav__link">
+    Installation
   </a>
+  
+    <nav class="md-nav" aria-label="Installation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#selenium" class="md-nav__link">
+    Selenium
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#playwright" class="md-nav__link">
+    Playwright
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -319,20 +359,37 @@
 
 
 
-<h1 id="welcome-to-mkdocs">Welcome to MkDocs</h1>
-<p>For full documentation visit <a href="https://www.mkdocs.org">mkdocs.org</a>.</p>
-<h2 id="commands">Commands</h2>
+<h1 id="axe-core-python">axe-core-python</h1>
+<p><img alt="PyPI" src="https://img.shields.io/pypi/v/axe-core-python" /> 
+<img alt="PyPI - License" src="https://img.shields.io/pypi/l/axe-core-python" /> 
+<img alt="PyPI - Python Version" src="https://img.shields.io/pypi/pyversions/axe-core-python" />
+<img alt="PyPI - Downloads" src="https://img.shields.io/pypi/dm/axe-core-python" /> </p>
+<p>Automated web accessibility testing using <a href="https://github.com/dequelabs/axe-core">axe-core</a> engine.</p>
+<h2 id="requirements">Requirements</h2>
+<p>You will need the following prerequisites in order to use axe-core-python:</p>
 <ul>
-<li><code>mkdocs new [dir-name]</code> - Create a new project.</li>
-<li><code>mkdocs serve</code> - Start the live-reloading docs server.</li>
-<li><code>mkdocs build</code> - Build the documentation site.</li>
-<li><code>mkdocs -h</code> - Print help message and exit.</li>
+<li>Python &gt;= 3.10</li>
+<li><a href="https://www.selenium.dev">selenium</a> &gt;= 4.4.0 
+or <a href="https://github.com/microsoft/playwright-python">playwright</a> &gt;= 1.25.0</li>
 </ul>
-<h2 id="project-layout">Project layout</h2>
-<pre><code>mkdocs.yml    # The configuration file.
-docs/
-    index.md  # The documentation homepage.
-    ...       # Other markdown pages, images and other files.
+<h2 id="installation">Installation</h2>
+<pre><code class="language-console">pip install -U axe-core-python
+</code></pre>
+<h3 id="selenium">Selenium</h3>
+<p>To install Selenium:</p>
+<pre><code class="language-console">pip install selenium
+</code></pre>
+<p>The appropriate driver for the browser you intend to use should be 
+downloaded and added to your path, 
+e.g. <a href="https://github.com/mozilla/geckodriver/releases">geckodriver</a> for Firefox:</p>
+<p>To simplify management of binary drivers for different browsers: 
+<a href="https://github.com/SergeyPirogov/webdriver_manager">Webdriver Manager for Python</a>.</p>
+<h3 id="playwright">Playwright</h3>
+<p>To install Playwright (<a href="https://playwright.bootcss.com/python/docs/installation">docs</a>):</p>
+<pre><code class="language-console">pip install playwright
+</code></pre>
+<p>Also install browser binaries:</p>
+<pre><code class="language-console">python -m playwright install
 </code></pre>
 
 
@@ -353,13 +410,13 @@ docs/
       
       
         
-        <a href="installation/" class="md-footer__link md-footer__link--next" aria-label="Next: Installation" rel="next">
+        <a href="usage/" class="md-footer__link md-footer__link--next" aria-label="Next: Usage" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 Next
               </span>
-              Installation
+              Usage
             </div>
           </div>
           <div class="md-footer__button md-icon">
