@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- None
+- `update-axe` CLI command to update the bundled `axe.min.js` file to the latest version
 
 ### Changed
 - Updated minimum Python version to 3.12
