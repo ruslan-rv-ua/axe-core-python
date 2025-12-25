@@ -38,6 +38,24 @@ uv run pytest
 version = "1.2.3"
 ```
 
+## Linting та Formatting
+
+Використовуй **ruff** для перевірки коду та форматування:
+
+```bash
+# Перевірка коду (linting)
+uv run ruff check .
+
+# Автоматичне виправлення проблем
+uv run ruff check --fix .
+
+# Форматування коду
+uv run ruff format .
+
+# Перевірка та форматування разом
+uv run ruff check --fix . && uv run ruff format .
+```
+
 ## Тестування
 
 Використовуй **pytest**:
@@ -47,8 +65,11 @@ version = "1.2.3"
 uv run pytest
 
 # З покриттям коду
-uv run pytest --cov=src --cov-report=html
+uv run pytest --cov=axe_core_python --cov-report=html
 
 # Конкретний тест
-uv run pytest tests/test_main.py::test_function
+uv run pytest tests/test_axe_selenium.py::test_function
+
+# Запуск з виводом print
+uv run pytest -s
 ```
