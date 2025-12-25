@@ -1,8 +1,9 @@
 from pathlib import Path
 
 import pytest
-from axe_core_python.selenium import Axe
 from selenium import webdriver
+
+from axe_core_python.selenium import Axe
 
 TEST_FILE = "test_page.html"
 TEST_FILE_PATH = Path(__file__).parent.absolute() / TEST_FILE
