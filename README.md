@@ -14,7 +14,7 @@ Automated web accessibility testing using [axe-core](https://github.com/dequelab
 
 ## Requirements
 
-- Python >= 3.10
+- Python >= 3.12
 - [selenium](https://www.selenium.dev) >= 4.4.0 
 or [playwright](https://github.com/microsoft/playwright-python) >= 1.25.0
 
@@ -56,3 +56,37 @@ update-axe
 ```
 
 This command downloads the latest version of axe-core from GitHub releases and updates the file `src/axe_core_python/axe.min.js`.
+
+## Development
+
+### Running Tests
+
+```bash
+# Install dependencies
+uv sync
+
+# Run fast unit tests (no browser required)
+uv run pytest
+
+# Run all tests including slow browser tests
+uv run pytest --runslow
+
+# Run tests for specific browser
+uv run pytest --runslow -m chromium
+uv run pytest --runslow -m firefox
+
+# Run with coverage
+uv run pytest --cov=axe_core_python --cov-report=html
+```
+
+### Test Markers
+
+- `unit` — Fast unit tests without browsers
+- `slow` — Slow tests requiring `--runslow` flag
+- `selenium` — Selenium WebDriver tests
+- `playwright` — Playwright tests
+- `chrome`, `firefox`, `chromium`, `webkit` — Browser-specific tests
+
+## License
+
+MIT

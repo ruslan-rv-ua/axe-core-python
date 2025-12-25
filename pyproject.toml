@@ -67,11 +67,31 @@ line-ending = "auto"
 [tool.hatch.build.targets.wheel]
 packages = ["src/axe_core_python", "scripts"]
 
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "selenium: marks tests as selenium-based",
+    "playwright: marks tests as playwright-based",
+    "unit: marks tests as unit tests (fast)",
+    "integration: marks tests as integration tests",
+    "chrome: marks tests for Chrome browser",
+    "firefox: marks tests for Firefox browser",
+    "chromium: marks tests for Chromium browser",
+    "webkit: marks tests for WebKit browser",
+]
+filterwarnings = [
+    "ignore::DeprecationWarning",
+]
+
 [dependency-groups]
 dev = [
     "playwright>=1.57.0",
     "pytest>=9.0.2",
     "pytest-asyncio>=1.3.0",
+    "pytest-cov>=6.0.0",
     "ruff>=0.14.10",
     "selenium>=4.39.0",
 ]

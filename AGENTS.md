@@ -61,15 +61,50 @@ uv run ruff check --fix . && uv run ruff format .
 Використовуй **pytest**:
 
 ```bash
-# Запуск тестів
+# Запуск швидких тестів (unit тести, без браузерів)
 uv run pytest
+
+# Запуск усіх тестів включаючи повільні браузерні
+uv run pytest --runslow
+
+# Запуск тестів для конкретного браузера
+uv run pytest --runslow -m chromium
+uv run pytest --runslow -m firefox
+uv run pytest --runslow -m webkit
+
+# Запуск тестів за типом
+uv run pytest -m unit          # Швидкі unit тести
+uv run pytest --runslow -m selenium    # Selenium тести
+uv run pytest --runslow -m playwright  # Playwright тести
 
 # З покриттям коду
 uv run pytest --cov=axe_core_python --cov-report=html
 
 # Конкретний тест
-uv run pytest tests/test_axe_selenium.py::test_function
+uv run pytest tests/test_axe_selenium.py::TestSeleniumFirefox::test_run_axe_basic
 
 # Запуск з виводом print
 uv run pytest -s
+```
+
+### Маркери тестів
+
+Тести організовані за маркерами:
+
+- `unit` — швидкі unit тести без браузерів
+- `slow` — повільні тести (вимагають `--runslow`)
+- `selenium` — тести з Selenium WebDriver
+- `playwright` — тести з Playwright
+- `chrome`, `firefox`, `chromium`, `webkit` — тести для конкретних браузерів
+
+### Структура тестів
+
+```
+tests/
+├── conftest.py          # Fixtures та pytest hooks
+├── test_base.py         # Unit тести для базових класів
+├── test_axe_selenium.py # Selenium integration тести
+├── test_axe_sync_playwright.py   # Sync Playwright тести
+├── test_axe_async_playwright.py  # Async Playwright тести
+└── test_page.html       # HTML сторінка для тестування
 ```

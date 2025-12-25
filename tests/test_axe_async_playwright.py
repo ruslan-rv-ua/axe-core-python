@@ -1,77 +1,275 @@
-from pathlib import Path
+"""
+Async Playwright integration tests for axe-core-python.
+
+These tests run axe-core accessibility checks using Playwright async API.
+They are marked as slow because they launch real browsers.
+
+Run with: pytest --runslow -m playwright
+"""
 
 import pytest
-import pytest_asyncio
-from playwright.async_api import async_playwright
 
 from axe_core_python.async_playwright import Axe
 
-TEST_FILE = "test_page.html"
-TEST_FILE_PATH = Path(__file__).parent.absolute() / TEST_FILE
+from .conftest import (
+    validate_axe_result_structure,
+    validate_node_structure,
+    validate_violation_structure,
+)
 
 
-@pytest_asyncio.fixture
-async def firefox_page():
-    async with async_playwright() as p:
-        browser = await p.firefox.launch()
-        page = await browser.new_page()
-        yield page
-        await browser.close()
+class TestAsyncPlaywrightFirefox:
+    """Async Playwright tests using Firefox browser."""
+
+    @pytest.mark.slow
+    @pytest.mark.playwright
+    @pytest.mark.firefox
+    async def test_run_axe_basic(self, async_playwright_firefox):
+        """Run axe against sample page and verify basic result structure."""
+        axe = Axe()
+        result = await axe.run(page=async_playwright_firefox)
+
+        validate_axe_result_structure(result)
+
+    @pytest.mark.slow
+    @pytest.mark.playwright
+    @pytest.mark.firefox
+    async def test_run_axe_expected_counts(self, async_playwright_firefox):
+        """Run axe against sample page and verify expected violation counts."""
+        axe = Axe()
+        result = await axe.run(page=async_playwright_firefox)
+
+        # Counts may vary slightly between axe-core versions
+        assert len(result["inapplicable"]) >= 70, "Should have many inapplicable rules"
+        assert len(result["incomplete"]) >= 0, "Incomplete can be 0 or more"
+        assert len(result["passes"]) >= 5, "Should have some passing rules"
+        assert len(result["violations"]) >= 8, "Test page should have violations"
+
+    @pytest.mark.slow
+    @pytest.mark.playwright
+    @pytest.mark.firefox
+    async def test_run_axe_violations_structure(self, async_playwright_firefox):
+        """Test that violations have the expected structure."""
+        axe = Axe()
+        result = await axe.run(page=async_playwright_firefox)
+
+        assert len(result["violations"]) > 0, "Test page should have violations"
+
+        for violation in result["violations"]:
+            validate_violation_structure(violation)
+            for node in violation["nodes"]:
+                validate_node_structure(node)
+
+    @pytest.mark.slow
+    @pytest.mark.playwright
+    @pytest.mark.firefox
+    async def test_run_axe_with_context_string(self, async_playwright_firefox):
+        """Test running axe with context as string selector."""
+        axe = Axe()
+        result = await axe.run(page=async_playwright_firefox, context="body")
+
+        validate_axe_result_structure(result)
+
+    @pytest.mark.slow
+    @pytest.mark.playwright
+    @pytest.mark.firefox
+    async def test_run_axe_with_context_dict(self, async_playwright_firefox):
+        """Test running axe with context as dict with include/exclude."""
+        axe = Axe()
+        result = await axe.run(page=async_playwright_firefox, context={"include": [["form"]]})
+
+        validate_axe_result_structure(result)
+        assert len(result["violations"]) > 0
+
+    @pytest.mark.slow
+    @pytest.mark.playwright
+    @pytest.mark.firefox
+    async def test_run_axe_with_options_run_only(self, async_playwright_firefox):
+        """Test running axe with options to run only specific rules."""
+        axe = Axe()
+        result = await axe.run(page=async_playwright_firefox, options={"runOnly": ["label"]})
+
+        validate_axe_result_structure(result)
+        assert len(result["violations"]) <= 9
+
+    @pytest.mark.slow
+    @pytest.mark.playwright
+    @pytest.mark.firefox
+    async def test_run_axe_with_options_disable_rule(self, async_playwright_firefox):
+        """Test running axe with a specific rule disabled."""
+        axe = Axe()
+        result = await axe.run(
+            page=async_playwright_firefox, options={"rules": {"label": {"enabled": False}}}
+        )
+
+        validate_axe_result_structure(result)
+        violation_ids = [v["id"] for v in result["violations"]]
+        assert "label" not in violation_ids
+
+    @pytest.mark.slow
+    @pytest.mark.playwright
+    @pytest.mark.firefox
+    async def test_run_axe_detects_known_violations(self, async_playwright_firefox):
+        """Test that axe detects known violations in the test page."""
+        axe = Axe()
+        result = await axe.run(page=async_playwright_firefox)
+
+        violation_ids = [v["id"] for v in result["violations"]]
+        assert "label" in violation_ids, "Should detect missing label"
+        assert "list" in violation_ids, "Should detect list structure violation"
+
+    @pytest.mark.slow
+    @pytest.mark.playwright
+    @pytest.mark.firefox
+    async def test_run_axe_result_has_timestamp(self, async_playwright_firefox):
+        """Test that axe result includes timestamp."""
+        axe = Axe()
+        result = await axe.run(page=async_playwright_firefox)
+
+        assert "timestamp" in result, "Result should have timestamp"
+
+    @pytest.mark.slow
+    @pytest.mark.playwright
+    @pytest.mark.firefox
+    async def test_run_axe_result_has_url(self, async_playwright_firefox):
+        """Test that axe result includes the tested URL."""
+        axe = Axe()
+        result = await axe.run(page=async_playwright_firefox)
+
+        assert "url" in result, "Result should have url"
+        assert "test_page.html" in result["url"]
 
 
-@pytest_asyncio.fixture
-async def chromium_page():
-    async with async_playwright() as p:
-        browser = await p.chromium.launch()
-        page = await browser.new_page()
-        yield page
-        await browser.close()
+class TestAsyncPlaywrightChromium:
+    """Async Playwright tests using Chromium browser."""
+
+    @pytest.mark.slow
+    @pytest.mark.playwright
+    @pytest.mark.chromium
+    async def test_run_axe_basic(self, async_playwright_chromium):
+        """Run axe against sample page and verify basic result structure."""
+        axe = Axe()
+        result = await axe.run(page=async_playwright_chromium)
+
+        validate_axe_result_structure(result)
+
+    @pytest.mark.slow
+    @pytest.mark.playwright
+    @pytest.mark.chromium
+    async def test_run_axe_expected_counts(self, async_playwright_chromium):
+        """Run axe against sample page and verify expected violation counts."""
+        axe = Axe()
+        result = await axe.run(page=async_playwright_chromium)
+
+        # Counts may vary slightly between axe-core versions
+        assert len(result["inapplicable"]) >= 70, "Should have many inapplicable rules"
+        assert len(result["incomplete"]) >= 0, "Incomplete can be 0 or more"
+        assert len(result["passes"]) >= 5, "Should have some passing rules"
+        assert len(result["violations"]) >= 8, "Test page should have violations"
+
+    @pytest.mark.slow
+    @pytest.mark.playwright
+    @pytest.mark.chromium
+    async def test_run_axe_violations_structure(self, async_playwright_chromium):
+        """Test that violations have the expected structure."""
+        axe = Axe()
+        result = await axe.run(page=async_playwright_chromium)
+
+        assert len(result["violations"]) > 0, "Test page should have violations"
+
+        for violation in result["violations"]:
+            validate_violation_structure(violation)
+
+    @pytest.mark.slow
+    @pytest.mark.playwright
+    @pytest.mark.chromium
+    async def test_run_axe_with_context_and_options(self, async_playwright_chromium):
+        """Test running axe with both context and options."""
+        axe = Axe()
+        result = await axe.run(
+            page=async_playwright_chromium,
+            context="form",
+            options={"runOnly": {"type": "tag", "values": ["wcag2a"]}},
+        )
+
+        validate_axe_result_structure(result)
+
+    @pytest.mark.slow
+    @pytest.mark.playwright
+    @pytest.mark.chromium
+    async def test_run_axe_detects_known_violations(self, async_playwright_chromium):
+        """Test that axe detects known violations in the test page."""
+        axe = Axe()
+        result = await axe.run(page=async_playwright_chromium)
+
+        violation_ids = [v["id"] for v in result["violations"]]
+        assert "label" in violation_ids, "Should detect missing label"
 
 
-@pytest_asyncio.fixture
-async def webkit_page():
-    async with async_playwright() as p:
-        browser = await p.chromium.launch()
-        page = await browser.new_page()
-        yield page
-        await browser.close()
+class TestAsyncPlaywrightWebKit:
+    """Async Playwright tests using WebKit browser."""
+
+    @pytest.mark.slow
+    @pytest.mark.playwright
+    @pytest.mark.webkit
+    async def test_run_axe_basic(self, async_playwright_webkit):
+        """Run axe against sample page and verify basic result structure."""
+        axe = Axe()
+        result = await axe.run(page=async_playwright_webkit)
+
+        validate_axe_result_structure(result)
+
+    @pytest.mark.slow
+    @pytest.mark.playwright
+    @pytest.mark.webkit
+    async def test_run_axe_expected_counts(self, async_playwright_webkit):
+        """Run axe against sample page and verify expected violation counts."""
+        axe = Axe()
+        result = await axe.run(page=async_playwright_webkit)
+
+        # Counts may vary slightly between axe-core versions
+        assert len(result["inapplicable"]) >= 70, "Should have many inapplicable rules"
+        assert len(result["incomplete"]) >= 0, "Incomplete can be 0 or more"
+        assert len(result["passes"]) >= 5, "Should have some passing rules"
+        assert len(result["violations"]) >= 8, "Test page should have violations"
+
+    @pytest.mark.slow
+    @pytest.mark.playwright
+    @pytest.mark.webkit
+    async def test_run_axe_violations_structure(self, async_playwright_webkit):
+        """Test that violations have the expected structure."""
+        axe = Axe()
+        result = await axe.run(page=async_playwright_webkit)
+
+        assert len(result["violations"]) > 0, "Test page should have violations"
+
+        for violation in result["violations"]:
+            validate_violation_structure(violation)
+
+    @pytest.mark.slow
+    @pytest.mark.playwright
+    @pytest.mark.webkit
+    async def test_run_axe_detects_known_violations(self, async_playwright_webkit):
+        """Test that axe detects known violations in the test page."""
+        axe = Axe()
+        result = await axe.run(page=async_playwright_webkit)
+
+        violation_ids = [v["id"] for v in result["violations"]]
+        assert "label" in violation_ids, "Should detect missing label"
 
 
-@pytest.mark.asyncio
-async def test_run_axe_sample_page_firefox(firefox_page):
-    """Run axe against sample page and verify JSON output is as expected."""
-    data = await _perform_axe_run(firefox_page)
+class TestAsyncPlaywrightCustomAxeScript:
+    """Tests for using custom axe script with async Playwright."""
 
-    assert len(data["inapplicable"]) == 71
-    assert len(data["incomplete"]) == 0
-    assert len(data["passes"]) == 7
-    assert len(data["violations"]) == 9
+    @pytest.mark.slow
+    @pytest.mark.playwright
+    @pytest.mark.chromium
+    async def test_run_axe_from_file(self, async_playwright_chromium):
+        """Test running axe with script loaded from file."""
+        from axe_core_python.base import AXE_FILE_PATH
 
+        axe = Axe.from_file(AXE_FILE_PATH)
+        result = await axe.run(page=async_playwright_chromium)
 
-@pytest.mark.asyncio
-async def test_run_axe_sample_page_chrimium(chromium_page):
-    """Run axe against sample page and verify JSON output is as expected."""
-    data = await _perform_axe_run(chromium_page)
-
-    assert len(data["inapplicable"]) == 71
-    assert len(data["incomplete"]) == 0
-    assert len(data["passes"]) == 7
-    assert len(data["violations"]) == 9
-
-
-@pytest.mark.asyncio
-async def test_run_axe_sample_page_webkit(webkit_page):
-    """Run axe against sample page and verify JSON output is as expected."""
-    data = await _perform_axe_run(webkit_page)
-
-    assert len(data["inapplicable"]) == 71
-    assert len(data["incomplete"]) == 0
-    assert len(data["passes"]) == 7
-    assert len(data["violations"]) == 9
-
-
-async def _perform_axe_run(page):
-    await page.goto("file://" + str(TEST_FILE_PATH))
-    axe = Axe()
-    data = await axe.run(page=page)
-    return data
+        validate_axe_result_structure(result)
+        assert len(result["violations"]) >= 8

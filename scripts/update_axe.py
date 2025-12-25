@@ -26,7 +26,7 @@ def get_latest_version() -> tuple[str, str]:
         tuple: (version, URL to download axe.min.js)
     """
     api_url = "https://api.github.com/repos/dequelabs/axe-core/releases/latest"
-    
+
     try:
         with request.urlopen(api_url) as response:
             data = json.loads(response.read().decode())
@@ -34,7 +34,7 @@ def get_latest_version() -> tuple[str, str]:
             download_url = f"https://cdn.jsdelivr.net/npm/axe-core@{version}/axe.min.js"
             return version, download_url
     except (HTTPError, URLError, KeyError, json.JSONDecodeError) as e:
-        raise RuntimeError(f"Error getting version information: {e}")
+        raise RuntimeError(f"Error getting version information: {e}") from e
 
 
 def get_current_version(axe_file_path: Path) -> str | None:
@@ -49,7 +49,7 @@ def get_current_version(axe_file_path: Path) -> str | None:
     """
     if not axe_file_path.exists():
         return None
-    
+
     content = axe_file_path.read_text(encoding="utf-8")
     # Search for version in the comment at the beginning of the file
     match = re.search(r"axe v(\d+\.\d+\.\d+)", content)
@@ -69,7 +69,7 @@ def download_axe_min_js(url: str, output_path: Path) -> None:
             content = response.read()
             output_path.write_bytes(content)
     except (HTTPError, URLError) as e:
-        raise RuntimeError(f"Error downloading file: {e}")
+        raise RuntimeError(f"Error downloading file: {e}") from e
 
 
 def update_copyright_header(axe_file_path: Path, version: str) -> None:
@@ -81,10 +81,10 @@ def update_copyright_header(axe_file_path: Path, version: str) -> None:
         version: new version
     """
     content = axe_file_path.read_text(encoding="utf-8")
-    
+
     # Remove old header if exists
     content = re.sub(r"/\*!.*?\*/\s*", "", content, flags=re.DOTALL, count=1)
-    
+
     # Add new header
     header = f"""/*! axe v{version}
  * Copyright (c) 2022 Deque Systems, Inc.
@@ -99,7 +99,7 @@ def update_copyright_header(axe_file_path: Path, version: str) -> None:
  */
 
 """
-    
+
     axe_file_path.write_text(header + content, encoding="utf-8")
 
 
@@ -109,35 +109,37 @@ def main() -> None:
     script_dir = Path(__file__).parent
     project_root = script_dir.parent
     axe_file_path = project_root / "src" / "axe_core_python" / "axe.min.js"
-    
+
     print("🔍 Checking for axe-core updates...")
-    
+
     # Get current and latest versions
     current_version = get_current_version(axe_file_path)
     latest_version, download_url = get_latest_version()
-    
+
     print(f"📦 Current version: {current_version or 'not found'}")
     print(f"🆕 Latest version: {latest_version}")
-    
+
     if current_version == latest_version:
         print("✅ You are already using the latest version!")
         return
-    
+
     # Download new version
     print(f"\n⬇️  Downloading axe-core v{latest_version}...")
     print(f"🔗 URL: {download_url}")
-    
+
     try:
         download_axe_min_js(download_url, axe_file_path)
         update_copyright_header(axe_file_path, latest_version)
-        
+
         print(f"\n✅ Successfully updated to version {latest_version}!")
         print(f"📁 File updated: {axe_file_path.relative_to(project_root)}")
-        
+
         if current_version:
             print(f"\n📝 Changes: {current_version} → {latest_version}")
-            print(f"🔗 Release notes: https://github.com/dequelabs/axe-core/releases/tag/v{latest_version}")
-        
+            print(
+                f"🔗 Release notes: https://github.com/dequelabs/axe-core/releases/tag/v{latest_version}"
+            )
+
     except RuntimeError as e:
         print(f"\n❌ {e}")
         return
