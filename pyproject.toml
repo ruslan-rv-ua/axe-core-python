@@ -1,13 +1,13 @@
-[tool.poetry]
+[project]
 name = "axe-core-python"
 version = "0.1.0"
 description = "Automated web accessibility testing using axe-core engine."
-authors = ["Ruslan Iskov <ruslan.rv.ua@gmail.com>"]
+authors = [
+    { name = "Ruslan Iskov", email = "ruslan.rv.ua@gmail.com" }
+]
 readme = "README.md"
-license = "MIT"
-homepage = "https://github.com/ruslan-rv-ua/axe-core-python"
-repository = "https://github.com/ruslan-rv-ua/axe-core-python"
-documentation = "https://ruslan-rv-ua.github.io/axe-core-python/"
+license = { text = "MIT" }
+requires-python = ">=3.10"
 keywords = ["accessibility", "axe", "axe-core", "selenium", "playwright"]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
@@ -19,21 +19,58 @@ classifiers = [
     "Topic :: Software Development :: Quality Assurance",
     "Topic :: Software Development :: Testing",
 ]
+dependencies = []
 
-[tool.poetry.dependencies]
-python = "^3.10"
+[project.urls]
+Homepage = "https://github.com/ruslan-rv-ua/axe-core-python"
+Repository = "https://github.com/ruslan-rv-ua/axe-core-python"
+Documentation = "https://ruslan-rv-ua.github.io/axe-core-python/"
 
-[tool.poetry.dev-dependencies]
-pytest = "^7.1"
-black = { version = "^22.6.0", allow-prereleases = true }
-selenium = "^4.4.3"
-playwright = "^1.25.2"
-pytest-asyncio = "^0.19.0"
-mkdocs = "^1.3.1"
-mkdocstrings = {extras = ["python"], version = "^0.19.0"}
-mkdocs-material = "^8.4.2"
-flake8 = "^5.0.4"
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.1",
+    "ruff>=0.1.0",
+    "selenium>=4.4.3",
+    "playwright>=1.25.2",
+    "pytest-asyncio>=0.19.0",
+    "mkdocs>=1.3.1",
+    "mkdocstrings[python]>=0.19.0",
+    "mkdocs-material>=8.4.2",
+]
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = [
+    "E",      # pycodestyle errors
+    "W",      # pycodestyle warnings
+    "F",      # pyflakes
+    "I",      # isort
+    "B",      # flake8-bugbear
+    "C4",     # flake8-comprehensions
+    "UP",     # pyupgrade
+    "ARG",    # flake8-unused-arguments
+    "SIM",    # flake8-simplify
+]
+ignore = [
+    "E501",   # line too long (handled by formatter)
+    "B008",   # do not perform function calls in argument defaults
+    "C901",   # too complex
+]
+
+[tool.ruff.format]
+indent-style = "space"
+quote-style = "double"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+
+[dependency-groups]
+dev = [
+    "ruff>=0.14.10",
+]
