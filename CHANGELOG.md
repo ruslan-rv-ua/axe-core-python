@@ -30,6 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Fixed typo in test name: `test_run_axe_sample_page_chrimium` → `test_run_axe_sample_page_chromium`
 - Fixed webkit fixture incorrectly using chromium browser instead of webkit
+- Fixed formatting of `options` parameter in `_format_script_args()` method to use `json.dumps()` for proper JSON serialization
 
 ## [0.1.0] - 2024-XX-XX
 
