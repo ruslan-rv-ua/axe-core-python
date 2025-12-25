@@ -1,5 +1,5 @@
-# axe-core-python
-
+    # axe-core-python
+    
 ![PyPI](https://img.shields.io/pypi/v/axe-core-python) 
 ![PyPI - License](https://img.shields.io/pypi/l/axe-core-python) 
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/axe-core-python)
@@ -44,3 +44,15 @@ print(f"{len(violations)} violations found.")
 ```
 
 For more examples see [documentation](https://ruslan-rv-ua.github.io/axe-core-python/).
+
+## CLI Commands
+
+### update-axe
+
+Update the bundled `axe.min.js` file to the latest version:
+
+```console
+update-axe
+```
+
+This command downloads the latest version of axe-core from GitHub releases and updates the file `src/axe_core_python/axe.min.js`.
