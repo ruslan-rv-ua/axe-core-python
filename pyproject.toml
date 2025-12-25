@@ -28,6 +28,10 @@ Documentation = "https://ruslan-rv-ua.github.io/axe-core-python/"
 
 
 
+[project.scripts]
+update-axe = "scripts.update_axe:main"
+
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
@@ -61,7 +65,7 @@ skip-magic-trailing-comma = false
 line-ending = "auto"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/axe_core_python"]
+packages = ["src/axe_core_python", "scripts"]
 
 [dependency-groups]
 dev = [
